@@ -28,13 +28,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun btnEntrar() {
+        val usuario = binding.editUsuario.text.toString()
         val senha = binding.editSenha.text.toString()
-        if (senha == ("senha_app")) {
+
+        if (usuario == "fulano" && senha == "senhafulano") {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+        else if (usuario == "sicrano" && senha == "senhasicrano") {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
         else {
-            Toast.makeText(this, "Senha inválida", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Login inválido", Toast.LENGTH_SHORT).show()
         }
     }
 }
