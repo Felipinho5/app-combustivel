@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.gravar.setOnClickListener(this)
+        binding.calcular.setOnClickListener(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -28,8 +28,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        if (view.id == R.id.gravar) {
-            binding.resposta.text = "Foi clicado"
+        if (view.id == R.id.calcular) {
+            btnCalcular()
+        }
+    }
+
+    fun btnCalcular() {
+        try {
+            val distanciaPercorrida = binding.editDistanciaPercorrida.text.toString().toDouble()
+            val preco = binding.editPreco.text.toString().toDouble()
+            val autonomia = binding.editAutonomia.text.toString().toDouble()
+
+            val gasto = distanciaPercorrida / autonomia * preco
+            binding.gasto.text = "R$%.2f".format(gasto)
+        } catch (e: Exception) {
+            binding.gasto.text = "Por favor, insira apenas números válidos."
         }
     }
 }
