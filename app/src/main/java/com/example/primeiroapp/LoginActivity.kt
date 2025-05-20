@@ -1,5 +1,6 @@
 package com.example.primeiroapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -17,30 +18,47 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.btnEntrar.setOnClickListener(this)
+        binding.btnIncluir.setOnClickListener(this)
+        binding.btnLista.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.btn_entrar) {
-            btnEntrar()
-        }
+        if (v.id == R.id.btn_incluir)
+            btnIncluir()
+        else if (v.id == R.id.btn_lista)
+            btnLista()
     }
 
-    private fun btnEntrar() {
-        val usuario = binding.editUsuario.text.toString()
-        val senha = binding.editSenha.text.toString()
+    private fun btnIncluir() {
+        val db = DBHelper(this, null)
 
-        if (usuario == "fulano" && senha == "senhafulano") {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-        else if (usuario == "sicrano" && senha == "senhasicrano") {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-        else {
-            Toast.makeText(this, "Login inválido", Toast.LENGTH_SHORT).show()
-        }
+        val name = binding.editNome.text.toString()
+        val age = binding.editIdade.text.toString()
+
+        db.addName(name, age)
+
+        Toast.makeText(this, name + " adicionado ao banco.", Toast.LENGTH_LONG).show()
+
+        binding.editNome.text.clear()
+        binding.editIdade.text.clear()
+    }
+
+    @SuppressLint("Range")
+    private fun btnLista() {
+        val db = DBHelper(this, null)
+
+        val cursor = db.getName()
+
+        cursor!!.moveToFirst()
+
+        binding.txtNome.text = "Nome\n\n"
+        binding.txtIdade.text = "Idade\n\n"
+
+        do {
+            binding.txtNome.append(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COL)) + "\n")
+            binding.txtIdade.append(cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL)) + "\n")
+        } while (cursor.moveToNext())
+
+        cursor.close()
     }
 }
